@@ -102,14 +102,19 @@ public class PedidoService implements PedidoUseCase {
         repository.eliminarPorId(id);
     }
 
+
     private void validar(Pedido pedido) {
-        if (pedido.getToneladas() == null
-                || pedido.getToneladas().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new ReglaNegocioException("Las toneladas deben ser mayores que cero");
+        if (pedido.getToneladas() == null || pedido.getToneladas().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new ReglaNegocioException("Las toneladas deben ser mayores que cero");}
+
+        String origen = pedido.getOrigen();
+        String destino = pedido.getDestino();
+
+        if (origen == null || origen.isBlank() || destino == null || destino.isBlank()) {
+            throw new ReglaNegocioException("El origen y el destino son obligatorios");
         }
 
-        if (pedido.getOrigen() != null
-                && pedido.getOrigen().equalsIgnoreCase(pedido.getDestino())) {
+        if (origen.trim().equalsIgnoreCase(destino.trim())) {
             throw new ReglaNegocioException("El origen y el destino no pueden ser iguales");
         }
     }
